@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>欲望メーカー</title>
+  <style>
+    body {
+      font-family: "Hiragino Kaku Gothic ProN", sans-serif;
+      background-color: #121212;
+      color: #eee;
+      text-align: center;
+      padding: 2rem;
+    }
+    h1 {
+      color: #f44336;
+    }
+    input {
+      padding: 0.5rem;
+      font-size: 1rem;
+      width: 60%;
+      max-width: 300px;
+      margin-bottom: 1rem;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      margin-left: 0.5rem;
+      cursor: pointer;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 2px;
+      margin-top: 1.5rem;
+    }
+    .cell {
+      background: #333;
+      color: white;
+      padding: 8px;
+      font-size: 0.9rem;
+      border-radius: 4px;
+    }
+    #shareBtn {
+      display: inline-block;
+      margin-top: 1.5rem;
+      background: #1da1f2;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>あなたの脳内…いや、欲望を診断</h1>
+  <input type="text" id="nameInput" placeholder="名前を入力して診断" />
+  <button onclick="generateDesire()">診断する</button>
+
+  <div id="resultArea"></div>
+  <a id="shareBtn" href="#" target="_blank" style="display:none;">Xでシェア</a>
+
+  <script>
+    const desires = [
+      {
+        type: "金欲",
+        core: "お金",
+        related: ["札束", "稼ぐ", "資産", "投資", "副業", "貯金", "株", "通帳"]
+      },
+      {
+        type: "食欲",
+        core: "食べたい",
+        related: ["肉", "寿司", "ラーメン", "甘い物", "スナック", "焼肉", "パン", "お菓子"]
+      },
+      {
+        type: "承認欲求",
+        core: "愛されたい",
+        related: ["いいね", "フォロワー", "SNS", "バズりたい", "注目", "評価", "承認", "RT"]
+      },
+      {
+        type: "性欲",
+        core: "抱きたい",
+        related: ["恋", "密着", "妄想", "キス", "ナイト", "誘惑", "ときめき", "本能"]
+      },
+      {
+        type: "物欲",
+        core: "欲しいもの",
+        related: ["ブランド", "セール", "新作", "限定", "ショッピング", "爆買い", "服", "バッグ"]
+      },
+      {
+        type: "支配欲",
+        core: "操りたい",
+        related: ["支配", "命令", "指示", "支配下", "権力", "支配者", "支配欲", "独裁"]
+      },
+      {
+        type: "知識欲",
+        core: "知りたい",
+        related: ["情報", "読書", "知識", "学び", "探求", "謎", "ニュース", "好奇心"]
+      }
+    ];
+
+    const noiseWords = ["ゲーム", "睡眠", "仕事", "自由", "筋トレ", "旅行", "家族", "猫", "YouTube", "昼寝", "掃除", "脱出", "カフェ", "DIY", "忍者"];
+
+    function hashCode(str) {
+      return str.split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+    }
+
+    function generateDesire() {
+      const name = document.getElementById("nameInput").value.trim();
+      if (!name) {
+        alert("名前を入力してください！");
+        return;
+      }
+
+      const seed = hashCode(name);
+      const desire = desires[seed % desires.length];
+      const grid = Array(81).fill("").map(() => ({
+        text: noiseWords[Math.floor(Math.random() * noiseWords.length)],
+        color: "#444"
+      }));
+
+      // 中央にコア
+      grid[40] = { text: desire.core, color: "#f44336" };
+
+      // 周囲8マスに関連語
+      const related = [...desire.related];
+      const neighborIndexes = [30,31,32,39,41,48,49,50];
+      neighborIndexes.forEach((i, idx) => {
+        grid[i] = { text: related[idx % related.length], color: "#2196f3" };
+      });
+
+      // 表示
+      let html = `<h2>${name}の欲望（${desire.type}）</h2><div class="grid">`;
+      grid.forEach(cell => {
+        html += `<div class="cell" style="background:${cell.color}">${cell.text}</div>`;
+      });
+      html += `</div>`;
+      document.getElementById("resultArea").innerHTML = html;
+
+      // シェアリンク
+      const shareText = encodeURIComponent(`${name}の欲望は「${desire.type}」でいっぱいだった…！ #欲望メーカー`);
+      const pageUrl = encodeURIComponent(location.href);
+      const shareUrl = `https://twitter.com/intent/tweet?text=${shareText}&url=${pageUrl}`;
+      const shareBtn = document.getElementById("shareBtn");
+      shareBtn.href = shareUrl;
+      shareBtn.style.display = "inline-block";
+    }
+  </script>
+</body>
+</html>
