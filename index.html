@@ -7,102 +7,136 @@
   <style>
     body {
       font-family: "Hiragino Kaku Gothic ProN", sans-serif;
-      background-color: #121212;
+      background-color: #1b1b1b;
       color: #eee;
       text-align: center;
-      padding: 2rem;
+      padding: 1rem;
     }
     h1 {
-      color: #f44336;
-    }
-    input {
-      padding: 0.5rem;
-      font-size: 1rem;
-      width: 60%;
-      max-width: 300px;
+      color: #ff5252;
+      font-size: 1.8rem;
       margin-bottom: 1rem;
     }
-    button {
-      padding: 0.5rem 1rem;
+    input, button {
       font-size: 1rem;
-      margin-left: 0.5rem;
+      padding: 0.6rem;
+      margin: 0.2rem;
+      border: none;
+      border-radius: 5px;
+    }
+    input {
+      width: 60%;
+      max-width: 300px;
+    }
+    button {
+      background-color: #ff5252;
+      color: white;
       cursor: pointer;
     }
     .grid {
       display: grid;
       grid-template-columns: repeat(9, 1fr);
-      gap: 2px;
+      gap: 4px;
       margin-top: 1.5rem;
     }
     .cell {
       background: #333;
-      color: white;
-      padding: 8px;
-      font-size: 0.9rem;
+      color: #fff;
+      padding: 10px 4px;
+      font-size: 0.7rem;
       border-radius: 4px;
+      min-height: 36px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      word-break: break-word;
     }
     #shareBtn {
       display: inline-block;
       margin-top: 1.5rem;
       background: #1da1f2;
       color: white;
-      padding: 0.5rem 1rem;
+      padding: 0.6rem 1rem;
       border-radius: 5px;
       text-decoration: none;
     }
+    footer {
+      margin-top: 2rem;
+      font-size: 0.9rem;
+    }
+    footer a {
+      color: #1da1f2;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border: 1px solid #1da1f2;
+      border-radius: 5px;
+      display: inline-block;
+    }
+    @media (max-width: 600px) {
+      .cell {
+        font-size: 0.6rem;
+        padding: 8px 2px;
+      }
+    }
   </style>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2LM85GJN0L"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-2LM85GJN0L');
+  </script>
 </head>
 <body>
-  <h1>あなたの脳内…いや、欲望を診断</h1>
+  <h1>欲望メーカー</h1>
+  <p>あなたの脳内、何に支配されてる？</p>
   <input type="text" id="nameInput" placeholder="名前を入力して診断" />
   <button onclick="generateDesire()">診断する</button>
 
   <div id="resultArea"></div>
   <a id="shareBtn" href="#" target="_blank" style="display:none;">Xでシェア</a>
 
+  <footer>
+    <p>つくったひと → <a href="https://x.com/kkp_webninja" target="_blank">@kkp_webninja</a></p>
+  </footer>
+
   <script>
     const desires = [
-      {
-        type: "金欲",
-        core: "お金",
-        related: ["札束", "稼ぐ", "資産", "投資", "副業", "貯金", "株", "通帳"]
-      },
-      {
-        type: "食欲",
-        core: "食べたい",
-        related: ["肉", "寿司", "ラーメン", "甘い物", "スナック", "焼肉", "パン", "お菓子"]
-      },
-      {
-        type: "承認欲求",
-        core: "愛されたい",
-        related: ["いいね", "フォロワー", "SNS", "バズりたい", "注目", "評価", "承認", "RT"]
-      },
-      {
-        type: "性欲",
-        core: "抱きたい",
-        related: ["恋", "密着", "妄想", "キス", "ナイト", "誘惑", "ときめき", "本能"]
-      },
-      {
-        type: "物欲",
-        core: "欲しいもの",
-        related: ["ブランド", "セール", "新作", "限定", "ショッピング", "爆買い", "服", "バッグ"]
-      },
-      {
-        type: "支配欲",
-        core: "操りたい",
-        related: ["支配", "命令", "指示", "支配下", "権力", "支配者", "支配欲", "独裁"]
-      },
-      {
-        type: "知識欲",
-        core: "知りたい",
-        related: ["情報", "読書", "知識", "学び", "探求", "謎", "ニュース", "好奇心"]
-      }
+      { type: "金欲", core: "お金", related: ["札束", "稼ぐ", "資産", "投資", "副業", "貯金", "株", "通帳"] },
+      { type: "食欲", core: "食べたい", related: ["肉", "寿司", "スイーツ", "焼肉", "ラーメン", "パン", "お菓子", "チョコ"] },
+      { type: "性欲", core: "抱きたい", related: ["恋", "キス", "妄想", "甘えたい", "密着", "夜", "魅了", "欲望"] },
+      { type: "物欲", core: "欲しいもの", related: ["ブランド", "限定", "セール", "爆買い", "バッグ", "服", "新作", "ガジェット"] },
+      { type: "承認欲求", core: "愛されたい", related: ["SNS", "フォロワー", "バズ", "いいね", "注目", "承認", "称賛", "影響力"] },
+      { type: "知識欲", core: "知りたい", related: ["情報", "本", "学び", "探求", "好奇心", "勉強", "謎", "研究"] },
+      { type: "権力欲", core: "支配したい", related: ["命令", "支配", "権力", "操作", "統治", "服従", "上下関係", "王"] },
+      { type: "自由欲", core: "自由になりたい", related: ["旅", "空", "解放", "ひとり時間", "脱出", "冒険", "自由", "逃避"] },
+      { type: "癒し欲", core: "癒されたい", related: ["猫", "温泉", "自然", "睡眠", "散歩", "森林", "香り", "やすらぎ"] },
+      { type: "健康欲", core: "健康になりたい", related: ["筋トレ", "野菜", "サプリ", "水", "睡眠", "ランニング", "免疫", "体調"] },
+      { type: "家族欲", core: "守りたい", related: ["家族", "子供", "妻", "夫", "安定", "信頼", "ぬくもり", "生活"] },
+      { type: "創作欲", core: "作りたい", related: ["音楽", "絵", "創造", "表現", "制作", "デザイン", "詩", "舞台"] },
     ];
 
-    const noiseWords = ["ゲーム", "睡眠", "仕事", "自由", "筋トレ", "旅行", "家族", "猫", "YouTube", "昼寝", "掃除", "脱出", "カフェ", "DIY", "忍者"];
+    const noiseWords = ["ゲーム", "昼寝", "掃除", "カフェ", "散歩", "DIY", "洗濯", "忍者", "動画", "アニメ", "バラエティ", "SNS", "ラジオ"];
 
-    function hashCode(str) {
-      return str.split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+    function stringToSeed(str) {
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        hash = (hash << 5) - hash + str.charCodeAt(i);
+        hash |= 0;
+      }
+      return Math.abs(hash);
+    }
+
+    function seededShuffle(array, seed) {
+      const result = array.slice();
+      for (let i = result.length - 1; i > 0; i--) {
+        const j = seed % (i + 1);
+        [result[i], result[j]] = [result[j], result[i]];
+        seed = (seed * 9301 + 49297) % 233280;
+      }
+      return result;
     }
 
     function generateDesire() {
@@ -112,38 +146,34 @@
         return;
       }
 
-      const seed = hashCode(name);
+      const seed = stringToSeed(name);
       const desire = desires[seed % desires.length];
-      const grid = Array(81).fill("").map(() => ({
-        text: noiseWords[Math.floor(Math.random() * noiseWords.length)],
+      const shuffledRelated = seededShuffle(desire.related, seed);
+      const shuffledNoise = seededShuffle(noiseWords, seed + 100);
+
+      const grid = Array(81).fill("").map((_, i) => ({
+        text: shuffledNoise[i % shuffledNoise.length],
         color: "#444"
       }));
 
-      // 中央にコア
-      grid[40] = { text: desire.core, color: "#f44336" };
+      grid[40] = { text: desire.core, color: "#ff5252" };
 
-      // 周囲8マスに関連語
-      const related = [...desire.related];
       const neighborIndexes = [30,31,32,39,41,48,49,50];
       neighborIndexes.forEach((i, idx) => {
-        grid[i] = { text: related[idx % related.length], color: "#2196f3" };
+        grid[i] = { text: shuffledRelated[idx % shuffledRelated.length], color: "#2196f3" };
       });
 
-      // 表示
-      let html = `<h2>${name}の欲望（${desire.type}）</h2><div class="grid">`;
+      let html = `<h2>${name}の欲望タイプ：${desire.type}</h2><div class="grid">`;
       grid.forEach(cell => {
         html += `<div class="cell" style="background:${cell.color}">${cell.text}</div>`;
       });
       html += `</div>`;
       document.getElementById("resultArea").innerHTML = html;
 
-      // シェアリンク
-      const shareText = encodeURIComponent(`${name}の欲望は「${desire.type}」でいっぱいだった…！ #欲望メーカー`);
+      const shareText = encodeURIComponent(`${name}の欲望は「${desire.type}」で埋め尽くされていた…！ #欲望メーカー`);
       const pageUrl = encodeURIComponent(location.href);
-      const shareUrl = `https://twitter.com/intent/tweet?text=${shareText}&url=${pageUrl}`;
-      const shareBtn = document.getElementById("shareBtn");
-      shareBtn.href = shareUrl;
-      shareBtn.style.display = "inline-block";
+      document.getElementById("shareBtn").href = `https://twitter.com/intent/tweet?text=${shareText}&url=${pageUrl}`;
+      document.getElementById("shareBtn").style.display = "inline-block";
     }
   </script>
 </body>
