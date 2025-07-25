@@ -55,10 +55,10 @@
     .main { background: #1e88e5 !important; }
     .sub  { background: #43a047 !important; }
 
-    .outer-border-top    { border-top: 2px solid #888; }
-    .outer-border-bottom { border-bottom: 2px solid #888; }
-    .outer-border-left   { border-left: 2px solid #888; }
-    .outer-border-right  { border-right: 2px solid #888; }
+    .outer-border-top    { border-top: 3px solid #fff; }
+    .outer-border-bottom { border-bottom: 3px solid #fff; }
+    .outer-border-left   { border-left: 3px solid #fff; }
+    .outer-border-right  { border-right: 3px solid #fff; }
 
     #shareBtn {
       display: inline-block;
@@ -93,13 +93,13 @@
   <script>
     const desires = [
       { type: "癒し欲", core: "癒されたい", related: ["自然", "香り", "温泉", "睡眠", "森林", "やすらぎ", "散歩", "体調"] },
-      { type: "承認欲", core: "認められたい", related: ["拍手", "SNS", "リアクション", "注目", "見られたい", "名誉", "賞賛", "フォロワー"] },
+      { type: "承認欲", core: "認められたい", related: ["拍手", "SNS", "注目", "見られたい", "名誉", "賞賛", "フォロワー"] },
       { type: "金欲", core: "お金がほしい", related: ["副業", "高収入", "投資", "宝くじ", "昇給", "節約", "貯金", "資産"] },
       { type: "食欲", core: "食べたい", related: ["スイーツ", "寿司", "ケーキ", "焼肉", "チョコ", "ラーメン", "餃子", "果物"] },
       { type: "支配欲", core: "支配したい", related: ["命令", "権力", "統治", "操作", "支配", "王", "服従", "上下関係"] }
     ];
 
-    const noise = ["ゲーム", "掃除", "カフェ", "ラジオ", "アニメ", "散歩", "DIY", "SNS", "映画", "仕事", "生活", "子供", "夫", "謎", "知恵", "情報", "管理", "デザイン"];
+    const noise = ["ゲーム", "掃除", "カフェ", "ラジオ", "アニメ", "散歩", "DIY", "SNS", "映画", "生活", "子供", "夫", "知恵", "情報", "管理", "デザイン"];
 
     function hashSeed(str) {
       return str.split('').reduce((s, c) => s + c.charCodeAt(0), 0);
@@ -128,16 +128,16 @@
         [3,4,5,12,13,14,21,22,23],
         [6,7,8,15,16,17,24,25,26],
         [27,28,29,36,37,38,45,46,47],
-        [51,52,53,60,61,62,69,70,71],
+        [33,34,35,42,43,44,51,52,53],
         [54,55,56,63,64,65,72,73,74],
         [57,58,59,66,67,68,75,76,77],
-        [33,34,35,42,43,44,51,52,53]
+        [60,61,62,69,70,71,78,79,80]
       ];
 
       outerBlocks.forEach((block, b) => {
         const d = subDesires[(seed + b * 7) % subDesires.length];
         block.forEach((idx, i) => {
-          let cls = "sub";
+          let cls = "";  // ← 外は色を付けない（.subなし）
           if (i < 3) cls += " outer-border-top";
           if (i % 3 === 0) cls += " outer-border-left";
           if (i % 3 === 2) cls += " outer-border-right";
