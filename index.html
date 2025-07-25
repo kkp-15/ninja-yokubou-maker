@@ -37,6 +37,7 @@
       grid-template-columns: repeat(9, 1fr);
       gap: 4px;
       margin-top: 1.5rem;
+      position: relative;
     }
     .cell {
       background: #333;
@@ -49,14 +50,19 @@
       justify-content: center;
       align-items: center;
       word-break: break-word;
+      position: relative;
+      box-sizing: border-box;
     }
     .core { background: #e53935 !important; }
     .main { background: #1e88e5 !important; }
     .sub  { background: #43a047 !important; }
-    .outer-border-top    { border-top: 3px solid #fff; }
-    .outer-border-bottom { border-bottom: 3px solid #fff; }
-    .outer-border-left   { border-left: 3px solid #fff; }
-    .outer-border-right  { border-right: 3px solid #fff; }
+    .outer-border {
+      outline: 2px solid #aaa;
+    }
+    .outer-border-top    { border-top: 2px solid #aaa; }
+    .outer-border-bottom { border-bottom: 2px solid #aaa; }
+    .outer-border-left   { border-left: 2px solid #aaa; }
+    .outer-border-right  { border-right: 2px solid #aaa; }
     #shareBtn {
       display: inline-block;
       margin-top: 1.5rem;
@@ -73,89 +79,92 @@
       color: #1da1f2;
       text-decoration: none;
     }
+    @media (max-width: 600px) {
+      .cell {
+        font-size: 0.6rem;
+        padding: 8px 2px;
+      }
+    }
   </style>
 </head>
 <body>
   <h1>欲望メーカー</h1>
-  <div id="resultArea"></div>  <input type="text" id="nameInput" placeholder="あなたの名前でも診断できます" />
-  <button onclick="generateDesire()">診断する</button><a id="shareBtn" href="#" target="_blank" style="display:none;">Xでシェア</a>
-
+  <input type="text" id="nameInput" placeholder="名前を入力して診断" />
+  <button onclick="generateDesire()">診断する</button>
+  <div id="resultArea"></div>
+  <a id="shareBtn" href="#" target="_blank" style="display:none;">Xでシェア</a>
   <footer>
     <p>つくったひと → <a href="https://x.com/kkp_webninja" target="_blank">@kkp_webninja</a></p>
-  </footer>  <script>
+  </footer>
+  <script>
     const desires = [
-      { type: "癒し欲", core: "癒されたい", related: ["自然", "香り", "温泉", "睡眠", "森林", "やすらぎ", "散歩", "体調"] },
-      { type: "承認欲", core: "認められたい", related: ["拍手", "SNS", "注目", "見られたい", "名誉", "賞賛", "フォロワー"] },
-      { type: "金欲", core: "お金がほしい", related: ["副業", "高収入", "投資", "宝くじ", "昇給", "節約", "貯金", "資産"] },
-      { type: "食欲", core: "食べたい", related: ["スイーツ", "寿司", "ケーキ", "焼肉", "チョコ", "ラーメン", "餃子", "果物"] },
-      { type: "支配欲", core: "支配したい", related: ["命令", "権力", "統治", "操作", "支配", "王", "服従", "上下関係"] }
-    ];
+      { type: "金欲", core: "お金がほしい", related: ["副業", "資産運用", "投資", "貯金", "節約", "宝くじ", "収益化", "稼ぐ力", "財テク", "お金大好き", "キャッシュフロー", "権利収入", "配当金", "不労所得", "FIRE", "経済的自由", "金運アップ", "金持ち父さん", "お金の勉強", "財布がパンパン"] },
+      { type: "食欲", core: "美味しいものが食べたい", related: ["スイーツ", "ラーメン", "焼肉", "お寿司", "食べ放題", "深夜のラーメン", "映えグルメ", "食べ歩き", "食レポ", "グルメ旅", "孤独のグルメ", "お取り寄せ", "コンビニ新作", "スタバ新作", "激辛チャレンジ", "B級グルメ", "鍋パ", "映え飯", "タピオカ", "おやつタイム"] },
+      { type: "承認欲", core: "認められたい", related: ["バズりたい", "いいね欲しい", "フォロワー増加", "SNS映え", "影響力", "モテたい", "称賛", "ヒーロー願望", "目立ちたい", "話題の中心", "トレンドに乗りたい", "炎上上等", "自撮り", "ブランド", "高級時計", "リア充アピール", "実績アピ", "学歴ドヤ", "資格マウント", "自慢したい"] },
+      { type: "癒し欲", core: "癒されたい", related: ["温泉", "マッサージ", "ペット動画", "アロマ", "自然", "スローライフ", "ヒーリング音楽", "お昼寝", "ぬくもり", "ぬいぐるみ", "焚き火", "森林浴", "海辺の散歩", "雨音BGM", "猫カフェ", "快眠グッズ", "優しい言葉", "ぬくもり布団", "ほっとする空間", "癒やし系彼女"] },
+      { type: "支配欲", core: "支配したい", related: ["リーダー", "支配者目線", "指示出し", "支配的ポジション", "王様ゲーム", "司令塔", "部下育成", "強い発言権", "ボス気質", "独裁者ごっこ", "決定権", "指導者", "命令口調", "絶対服従", "支配下", "主従関係", "上から目線", "力でねじ伏せたい", "組織掌握", "俺ルール"] }
+    ];const noise = ["★", "☆", "☯", "※", "♨", "∞", "♡", "♪", "♻", "⚡", "☕", "🌙", "💰", "🍜", "🔥", "🎯", "🐾", "📱", "👑", "😴"];
 
-    const noise = ["ゲーム", "掃除", "カフェ", "ラジオ", "アニメ", "散歩", "DIY", "SNS", "映画", "生活", "子供", "夫", "知恵", "情報", "管理", "デザイン"];
+function hashSeed(str) {
+  return str.split('').reduce((s, c) => s + c.charCodeAt(0), 0);
+}
 
-    function hashSeed(str) {
-      return str.split('').reduce((s, c) => s + c.charCodeAt(0), 0);
-    }
+function generateDesire() {
+  const name = document.getElementById("nameInput").value.trim();
+  if (!name) return alert("名前を入力してください");
+  const seed = hashSeed(name);
+  const coreDesire = desires[seed % desires.length];
+  const subDesires = desires.filter(d => d !== coreDesire);
 
-    function generateDesire(nameOverride = null) {
-      const name = nameOverride || document.getElementById("nameInput").value.trim();
-      if (!name) return alert("名前を入力してください");
+  const grid = Array(81).fill(null).map((_, i) => ({ text: noise[(seed + i) % noise.length], class: "" }));
+  const centerIndexes = [30,31,32,39,40,41,48,49,50];
+  const shuffled = [...coreDesire.related];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = (seed + i) % (i + 1);
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
 
-      const seed = hashSeed(name);
-      const coreDesire = desires[seed % desires.length];
-      const subDesires = desires.filter(d => d !== coreDesire);
+  centerIndexes.forEach((idx, i) => {
+    grid[idx] = {
+      text: i === 4 ? coreDesire.core : shuffled[i % shuffled.length],
+      class: i === 4 ? "core" : "main"
+    };
+  });
 
-      const grid = Array(81).fill(null).map((_, i) => ({ text: noise[(seed + i) % noise.length], class: "" }));
+  const outerBlocks = [
+    [0,1,2,9,10,11,18,19,20], [3,4,5,12,13,14,21,22,23], [6,7,8,15,16,17,24,25,26],
+    [27,28,29,36,37,38,45,46,47], [51,52,53,60,61,62,69,70,71], [54,55,56,63,64,65,72,73,74],
+    [57,58,59,66,67,68,75,76,77], [33,34,35,42,43,44,51,52,53]
+  ];
 
-      const centerIndexes = [30,31,32,39,40,41,48,49,50];
-      centerIndexes.forEach((idx, i) => {
-        grid[idx] = {
-          text: i === 4 ? coreDesire.core : coreDesire.related[(seed + i) % coreDesire.related.length],
-          class: i === 4 ? "core" : "main"
-        };
-      });
-
-      const outerBlocks = [
-        [0,1,2,9,10,11,18,19,20], [3,4,5,12,13,14,21,22,23], [6,7,8,15,16,17,24,25,26],
-        [27,28,29,36,37,38,45,46,47], [33,34,35,42,43,44,51,52,53],
-        [54,55,56,63,64,65,72,73,74], [57,58,59,66,67,68,75,76,77], [60,61,62,69,70,71,78,79,80]
-      ];
-
-      outerBlocks.forEach((block, b) => {
-        const d = subDesires[(seed + b * 7) % subDesires.length];
-        block.forEach((idx, i) => {
-          let cls = "";
-          if (i < 3) cls += " outer-border-top";
-          if (i % 3 === 0) cls += " outer-border-left";
-          if (i % 3 === 2) cls += " outer-border-right";
-          if (i >= 6) cls += " outer-border-bottom";
-          grid[idx] = {
-            text: d.related[(seed + idx + i) % d.related.length],
-            class: cls
-          };
-        });
-      });
-
-      let html = `<h2>${name}の欲望タイプ：${coreDesire.type}</h2><div class="grid">`;
-      grid.forEach(cell => {
-        html += `<div class="cell ${cell.class}">${cell.text}</div>`;
-      });
-      html += `</div>`;
-      document.getElementById("resultArea").innerHTML = html;
-
-      const shareText = encodeURIComponent(`${name}の欲望は「${coreDesire.type}」で溢れていた…！ #欲望メーカー`);
-      const pageUrl = encodeURIComponent(location.origin + location.pathname + "?n=" + encodeURIComponent(name));
-      document.getElementById("shareBtn").href = `https://twitter.com/intent/tweet?text=${shareText}&url=${pageUrl}`;
-      document.getElementById("shareBtn").style.display = "inline-block";
-    }
-
-    window.addEventListener("DOMContentLoaded", () => {
-      const params = new URLSearchParams(location.search);
-      const nameFromUrl = params.get("n");
-      if (nameFromUrl) {
-        document.getElementById("nameInput").value = nameFromUrl;
-        generateDesire(nameFromUrl);
+  outerBlocks.forEach((block, b) => {
+    const d = subDesires[(seed + b * 7) % subDesires.length];
+    block.forEach((idx, i) => {
+      let cls = "sub";
+      if (i < 3) cls += " outer-border-top";
+      if (i % 3 === 0) cls += " outer-border-left";
+      if (i % 3 === 2) cls += " outer-border-right";
+      if (i >= 6) cls += " outer-border-bottom";
+      grid[idx] = {
+        text: d.related[(seed + idx + i) % d.related.length],
+        class: cls
       }
     });
-  </script></body>
+  });
+
+  let html = `<h2>${name}の欲望タイプ：${coreDesire.type}</h2><div class="grid">`;
+  grid.forEach(cell => {
+    html += `<div class="cell ${cell.class}">${cell.text}</div>`;
+  });
+  html += `</div>`;
+  document.getElementById("resultArea").innerHTML = html;
+
+  const shareText = encodeURIComponent(`${name}の欲望は「${coreDesire.type}」で溢れていた…！ #欲望メーカー`);
+  const pageUrl = encodeURIComponent(location.href);
+  document.getElementById("shareBtn").href = `https://twitter.com/intent/tweet?text=${shareText}&url=${pageUrl}`;
+  document.getElementById("shareBtn").style.display = "inline-block";
+}
+
+  </script>
+</body>
 </html>
