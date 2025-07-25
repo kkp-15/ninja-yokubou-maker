@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="ja">
+<!DOCTYPE html><html lang="ja">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -41,7 +40,7 @@
     }
     .cell {
       background: #333;
-      color: #fff;
+      color: white;
       padding: 10px 4px;
       font-size: 0.7rem;
       border-radius: 4px;
@@ -51,6 +50,9 @@
       align-items: center;
       word-break: break-word;
     }
+    .core { background: #e53935 !important; }
+    .main { background: #1e88e5 !important; }
+    .sub  { background: #43a047 !important; }
     #shareBtn {
       display: inline-block;
       margin-top: 1.5rem;
@@ -62,15 +64,10 @@
     }
     footer {
       margin-top: 2rem;
-      font-size: 0.9rem;
     }
     footer a {
       color: #1da1f2;
       text-decoration: none;
-      padding: 0.5rem 1rem;
-      border: 1px solid #1da1f2;
-      border-radius: 5px;
-      display: inline-block;
     }
     @media (max-width: 600px) {
       .cell {
@@ -78,103 +75,100 @@
         padding: 8px 2px;
       }
     }
-  </style>
-
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2LM85GJN0L"></script>
-  <script>
+  </style>  <!-- Google Analytics -->  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2LM85GJN0L"></script>  <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-2LM85GJN0L');
-  </script>
-</head>
+  </script></head>
 <body>
   <h1>欲望メーカー</h1>
-  <p>あなたの脳内、何に支配されてる？</p>
   <input type="text" id="nameInput" placeholder="名前を入力して診断" />
-  <button onclick="generateDesire()">診断する</button>
-
-  <div id="resultArea"></div>
-  <a id="shareBtn" href="#" target="_blank" style="display:none;">Xでシェア</a>
-
-  <footer>
+  <button onclick="generateDesire()">診断する</button>  <div id="resultArea"></div>
+  <a id="shareBtn" href="#" target="_blank" style="display:none;">Xでシェア</a>  <footer>
     <p>つくったひと → <a href="https://x.com/kkp_webninja" target="_blank">@kkp_webninja</a></p>
-  </footer>
-
-  <script>
+  </footer>  <script>
     const desires = [
-      { type: "金欲", core: "お金", related: ["札束", "稼ぐ", "資産", "投資", "副業", "貯金", "株", "通帳"] },
-      { type: "食欲", core: "食べたい", related: ["肉", "寿司", "スイーツ", "焼肉", "ラーメン", "パン", "お菓子", "チョコ"] },
-      { type: "性欲", core: "抱きたい", related: ["恋", "キス", "妄想", "甘えたい", "密着", "夜", "魅了", "欲望"] },
-      { type: "物欲", core: "欲しいもの", related: ["ブランド", "限定", "セール", "爆買い", "バッグ", "服", "新作", "ガジェット"] },
-      { type: "承認欲求", core: "愛されたい", related: ["SNS", "フォロワー", "バズ", "いいね", "注目", "承認", "称賛", "影響力"] },
-      { type: "知識欲", core: "知りたい", related: ["情報", "本", "学び", "探求", "好奇心", "勉強", "謎", "研究"] },
-      { type: "権力欲", core: "支配したい", related: ["命令", "支配", "権力", "操作", "統治", "服従", "上下関係", "王"] },
-      { type: "自由欲", core: "自由になりたい", related: ["旅", "空", "解放", "ひとり時間", "脱出", "冒険", "自由", "逃避"] },
+      { type: "金欲", core: "お金", related: ["札束", "稼ぐ", "投資", "副業", "通帳", "現金", "口座", "預金"] },
+      { type: "食欲", core: "食べたい", related: ["ラーメン", "寿司", "肉", "スイーツ", "パン", "チョコ", "焼肉", "ケーキ"] },
+      { type: "性欲", core: "抱きたい", related: ["恋", "妄想", "キス", "甘えたい", "密着", "夜", "欲望", "ドキドキ"] },
+      { type: "物欲", core: "欲しいもの", related: ["バッグ", "限定", "新作", "服", "セール", "時計", "ガジェット", "ブランド"] },
+      { type: "承認欲求", core: "愛されたい", related: ["SNS", "いいね", "フォロワー", "拡散", "注目", "バズ", "評価", "拍手"] },
+      { type: "知識欲", core: "知りたい", related: ["情報", "本", "探求", "学び", "謎", "研究", "知恵", "勉強"] },
+      { type: "支配欲", core: "支配したい", related: ["命令", "権力", "操作", "服従", "統治", "支配者", "管理", "上下関係"] },
+      { type: "自由欲", core: "自由になりたい", related: ["旅", "空", "解放", "一人時間", "脱出", "冒険", "逃避", "孤独"] },
       { type: "癒し欲", core: "癒されたい", related: ["猫", "温泉", "自然", "睡眠", "散歩", "森林", "香り", "やすらぎ"] },
-      { type: "健康欲", core: "健康になりたい", related: ["筋トレ", "野菜", "サプリ", "水", "睡眠", "ランニング", "免疫", "体調"] },
-      { type: "家族欲", core: "守りたい", related: ["家族", "子供", "妻", "夫", "安定", "信頼", "ぬくもり", "生活"] },
+      { type: "健康欲", core: "健康になりたい", related: ["筋トレ", "食事", "睡眠", "サプリ", "水", "体調", "運動", "ランニング"] },
+      { type: "家族欲", core: "守りたい", related: ["家族", "子供", "妻", "夫", "安心", "信頼", "ぬくもり", "生活"] },
       { type: "創作欲", core: "作りたい", related: ["音楽", "絵", "創造", "表現", "制作", "デザイン", "詩", "舞台"] },
     ];
 
-    const noiseWords = ["ゲーム", "昼寝", "掃除", "カフェ", "散歩", "DIY", "洗濯", "忍者", "動画", "アニメ", "バラエティ", "SNS", "ラジオ"];
+    const noise = ["ゲーム", "昼寝", "掃除", "カフェ", "散歩", "DIY", "洗濯", "忍者", "動画", "アニメ", "バラエティ", "SNS", "ラジオ"]
 
-    function stringToSeed(str) {
-      let hash = 0;
-      for (let i = 0; i < str.length; i++) {
-        hash = (hash << 5) - hash + str.charCodeAt(i);
-        hash |= 0;
-      }
-      return Math.abs(hash);
+    function hashSeed(str) {
+      return str.split('').reduce((s, c) => s + c.charCodeAt(0), 0);
     }
 
-    function seededShuffle(array, seed) {
-      const result = array.slice();
-      for (let i = result.length - 1; i > 0; i--) {
-        const j = seed % (i + 1);
-        [result[i], result[j]] = [result[j], result[i]];
-        seed = (seed * 9301 + 49297) % 233280;
-      }
-      return result;
+    function seededPick(arr, seedOffset) {
+      return arr[seedOffset % arr.length];
     }
 
     function generateDesire() {
       const name = document.getElementById("nameInput").value.trim();
-      if (!name) {
-        alert("名前を入力してください！");
-        return;
-      }
+      if (!name) return alert("名前を入力してください");
 
-      const seed = stringToSeed(name);
-      const desire = desires[seed % desires.length];
-      const shuffledRelated = seededShuffle(desire.related, seed);
-      const shuffledNoise = seededShuffle(noiseWords, seed + 100);
+      const seed = hashSeed(name);
+      const coreDesire = desires[seed % desires.length];
+      const subDesires = desires.filter(d => d !== coreDesire);
 
-      const grid = Array(81).fill("").map((_, i) => ({
-        text: shuffledNoise[i % shuffledNoise.length],
-        color: "#444"
-      }));
+      // 81マス全体をnoiseで初期化
+      const grid = Array(81).fill(null).map((_, i) => ({ text: noise[(seed + i) % noise.length], class: "" }));
 
-      grid[40] = { text: desire.core, color: "#ff5252" };
+      const coreCenter = 40;
+      const centerIndexes = [30,31,32,39,40,41,48,49,50];
+      const outerDesireSeeds = [0, 1, 2, 3, 4, 5, 6, 7];
 
-      const neighborIndexes = [30,31,32,39,41,48,49,50];
-      neighborIndexes.forEach((i, idx) => {
-        grid[i] = { text: shuffledRelated[idx % shuffledRelated.length], color: "#2196f3" };
+      // 中央にコアと関連語
+      centerIndexes.forEach((idx, i) => {
+        grid[idx] = {
+          text: i === 4 ? coreDesire.core : coreDesire.related[(seed + i) % coreDesire.related.length],
+          class: i === 4 ? "core" : "main"
+        };
       });
 
-      let html = `<h2>${name}の欲望タイプ：${desire.type}</h2><div class="grid">`;
+      // 外周に別カテゴリの欲望を配置
+      const outerBlocks = [
+        [0,1,2,9,10,11,18,19,20],
+        [3,4,5,12,13,14,21,22,23],
+        [6,7,8,15,16,17,24,25,26],
+        [27,28,29,36,37,38,45,46,47],
+        [51,52,53,60,61,62,69,70,71],
+        [54,55,56,63,64,65,72,73,74],
+        [57,58,59,66,67,68,75,76,77],
+        [33,34,35,42,43,44,51,52,53]
+      ];
+
+      outerBlocks.forEach((block, b) => {
+        const d = subDesires[(seed + b * 7) % subDesires.length];
+        block.forEach((idx, i) => {
+          grid[idx] = {
+            text: d.related[(seed + idx + i) % d.related.length],
+            class: "sub"
+          }
+        });
+      });
+
+      let html = `<h2>${name}の欲望タイプ：${coreDesire.type}</h2><div class="grid">`;
       grid.forEach(cell => {
-        html += `<div class="cell" style="background:${cell.color}">${cell.text}</div>`;
+        html += `<div class="cell ${cell.class}">${cell.text}</div>`;
       });
       html += `</div>`;
       document.getElementById("resultArea").innerHTML = html;
 
-      const shareText = encodeURIComponent(`${name}の欲望は「${desire.type}」で埋め尽くされていた…！ #欲望メーカー`);
+      const shareText = encodeURIComponent(`${name}の欲望は「${coreDesire.type}」で溢れていた…！ #欲望メーカー`);
       const pageUrl = encodeURIComponent(location.href);
       document.getElementById("shareBtn").href = `https://twitter.com/intent/tweet?text=${shareText}&url=${pageUrl}`;
       document.getElementById("shareBtn").style.display = "inline-block";
     }
-  </script>
-</body>
+  </script></body>
 </html>
