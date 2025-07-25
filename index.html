@@ -37,6 +37,7 @@
       grid-template-columns: repeat(9, 1fr);
       gap: 4px;
       margin-top: 1.5rem;
+      position: relative;
     }
     .cell {
       background: #333;
@@ -49,10 +50,14 @@
       justify-content: center;
       align-items: center;
       word-break: break-word;
+      position: relative;
     }
     .core { background: #e53935 !important; }
     .main { background: #1e88e5 !important; }
     .sub  { background: #43a047 !important; }
+    .outer-border {
+      border: 2px solid #aaa;
+    }
     #shareBtn {
       display: inline-block;
       margin-top: 1.5rem;
@@ -109,10 +114,6 @@
       return str.split('').reduce((s, c) => s + c.charCodeAt(0), 0);
     }
 
-    function seededPick(arr, seedOffset) {
-      return arr[seedOffset % arr.length];
-    }
-
     function generateDesire() {
       const name = document.getElementById("nameInput").value.trim();
       if (!name) return alert("名前を入力してください");
@@ -121,14 +122,9 @@
       const coreDesire = desires[seed % desires.length];
       const subDesires = desires.filter(d => d !== coreDesire);
 
-      // 81マス全体をnoiseで初期化
       const grid = Array(81).fill(null).map((_, i) => ({ text: noise[(seed + i) % noise.length], class: "" }));
 
-      const coreCenter = 40;
       const centerIndexes = [30,31,32,39,40,41,48,49,50];
-      const outerDesireSeeds = [0, 1, 2, 3, 4, 5, 6, 7];
-
-      // 中央にコアと関連語
       centerIndexes.forEach((idx, i) => {
         grid[idx] = {
           text: i === 4 ? coreDesire.core : coreDesire.related[(seed + i) % coreDesire.related.length],
@@ -136,7 +132,6 @@
         };
       });
 
-      // 外周に別カテゴリの欲望を配置
       const outerBlocks = [
         [0,1,2,9,10,11,18,19,20],
         [3,4,5,12,13,14,21,22,23],
@@ -153,14 +148,14 @@
         block.forEach((idx, i) => {
           grid[idx] = {
             text: d.related[(seed + idx + i) % d.related.length],
-            class: "sub"
+            class: "sub outer-border"
           }
         });
       });
 
-      let html = `<h2>${name}の欲望タイプ：${coreDesire.type}</h2><div class="grid">`;
+      let html = `<h2>${name}の欲望タイプ：${coreDesire.type}</h2><div class=\"grid\">`;
       grid.forEach(cell => {
-        html += `<div class="cell ${cell.class}">${cell.text}</div>`;
+        html += `<div class=\"cell ${cell.class}\">${cell.text}</div>`;
       });
       html += `</div>`;
       document.getElementById("resultArea").innerHTML = html;
