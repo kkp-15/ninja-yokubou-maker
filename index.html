@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="ja">
+<!DOCTYPE html><html lang="ja">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -54,12 +53,10 @@
     .core { background: #e53935 !important; }
     .main { background: #1e88e5 !important; }
     .sub  { background: #43a047 !important; }
-
     .outer-border-top    { border-top: 3px solid #fff; }
     .outer-border-bottom { border-bottom: 3px solid #fff; }
     .outer-border-left   { border-left: 3px solid #fff; }
     .outer-border-right  { border-right: 3px solid #fff; }
-
     #shareBtn {
       display: inline-block;
       margin-top: 1.5rem;
@@ -80,17 +77,12 @@
 </head>
 <body>
   <h1>欲望メーカー</h1>
-  <input type="text" id="nameInput" placeholder="名前を入力して診断" />
-  <button onclick="generateDesire()">診断する</button>
-
-  <div id="resultArea"></div>
-  <a id="shareBtn" href="#" target="_blank" style="display:none;">Xでシェア</a>
+  <div id="resultArea"></div>  <input type="text" id="nameInput" placeholder="あなたの名前でも診断できます" />
+  <button onclick="generateDesire()">診断する</button><a id="shareBtn" href="#" target="_blank" style="display:none;">Xでシェア</a>
 
   <footer>
     <p>つくったひと → <a href="https://x.com/kkp_webninja" target="_blank">@kkp_webninja</a></p>
-  </footer>
-
-  <script>
+  </footer>  <script>
     const desires = [
       { type: "癒し欲", core: "癒されたい", related: ["自然", "香り", "温泉", "睡眠", "森林", "やすらぎ", "散歩", "体調"] },
       { type: "承認欲", core: "認められたい", related: ["拍手", "SNS", "注目", "見られたい", "名誉", "賞賛", "フォロワー"] },
@@ -105,8 +97,8 @@
       return str.split('').reduce((s, c) => s + c.charCodeAt(0), 0);
     }
 
-    function generateDesire() {
-      const name = document.getElementById("nameInput").value.trim();
+    function generateDesire(nameOverride = null) {
+      const name = nameOverride || document.getElementById("nameInput").value.trim();
       if (!name) return alert("名前を入力してください");
 
       const seed = hashSeed(name);
@@ -124,20 +116,15 @@
       });
 
       const outerBlocks = [
-        [0,1,2,9,10,11,18,19,20],
-        [3,4,5,12,13,14,21,22,23],
-        [6,7,8,15,16,17,24,25,26],
-        [27,28,29,36,37,38,45,46,47],
-        [33,34,35,42,43,44,51,52,53],
-        [54,55,56,63,64,65,72,73,74],
-        [57,58,59,66,67,68,75,76,77],
-        [60,61,62,69,70,71,78,79,80]
+        [0,1,2,9,10,11,18,19,20], [3,4,5,12,13,14,21,22,23], [6,7,8,15,16,17,24,25,26],
+        [27,28,29,36,37,38,45,46,47], [33,34,35,42,43,44,51,52,53],
+        [54,55,56,63,64,65,72,73,74], [57,58,59,66,67,68,75,76,77], [60,61,62,69,70,71,78,79,80]
       ];
 
       outerBlocks.forEach((block, b) => {
         const d = subDesires[(seed + b * 7) % subDesires.length];
         block.forEach((idx, i) => {
-          let cls = "";  // ← 外は色を付けない（.subなし）
+          let cls = "";
           if (i < 3) cls += " outer-border-top";
           if (i % 3 === 0) cls += " outer-border-left";
           if (i % 3 === 2) cls += " outer-border-right";
@@ -157,10 +144,18 @@
       document.getElementById("resultArea").innerHTML = html;
 
       const shareText = encodeURIComponent(`${name}の欲望は「${coreDesire.type}」で溢れていた…！ #欲望メーカー`);
-      const pageUrl = encodeURIComponent(location.href);
+      const pageUrl = encodeURIComponent(location.origin + location.pathname + "?n=" + encodeURIComponent(name));
       document.getElementById("shareBtn").href = `https://twitter.com/intent/tweet?text=${shareText}&url=${pageUrl}`;
       document.getElementById("shareBtn").style.display = "inline-block";
     }
-  </script>
-</body>
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const params = new URLSearchParams(location.search);
+      const nameFromUrl = params.get("n");
+      if (nameFromUrl) {
+        document.getElementById("nameInput").value = nameFromUrl;
+        generateDesire(nameFromUrl);
+      }
+    });
+  </script></body>
 </html>
